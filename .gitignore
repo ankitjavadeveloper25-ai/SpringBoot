@@ -1,0 +1,27 @@
+# Compiled class and build files
+target/
+*.class
+*.jar
+*.war
+*.ear
+
+# Logs
+logs/
+*.log
+
+# IDE & Editor settings
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Secrets & Environment variables
+.env
+.env.local
+local.properties

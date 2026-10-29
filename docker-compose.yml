@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: winterarc-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: winterarcdb
+      POSTGRES_USER: winterarc_admin
+      POSTGRES_PASSWORD: winterarc_secure_password_replace_in_prod
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U winterarc_admin -d winterarcdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  winter-arc-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: winterarc-server
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/winterarcdb
+      SPRING_DATASOURCE_USERNAME: winterarc_admin
+      SPRING_DATASOURCE_PASSWORD: winterarc_secure_password_replace_in_prod
+      WINTERARC_SECURITY_JWT_SECRET: "winterarc_super_secure_jwt_secret_key_minimum_256_bits_length_for_hmac_sha256!"
+      WINTERARC_ENTITLEMENT_ACTIVE_KEY_ID: "ed25519-2026-v1"
+      WINTERARC_ENTITLEMENT_PRIVATE_KEY: "MC4CAQAwBQYDK2VwBCIEIIFVzMh7VkMNYgPxVtTe2NY/8dbuitHEwKYw9ojUwfWM"
+      WINTERARC_ENTITLEMENT_PUBLIC_KEY: "MCowBQYDK2VwAyEAymrcZQtlmSRFGVI/sW+IGNUHFN4ksBAq8iVjfjuDohg="
+      STRIPE_WEBHOOK_SECRET: "whsec_stripe_winterarc_prod_secret_key_test_123"
+      RAZORPAY_WEBHOOK_SECRET: "rzp_sec_razorpay_winterarc_prod_secret_key_test_123"
+
+volumes:
+  pgdata:

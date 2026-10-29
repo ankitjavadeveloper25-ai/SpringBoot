@@ -1,0 +1,74 @@
+# ====================================================================
+# WINTER ARC PRO — PRODUCTION CONFIGURATION (SPRING_PROFILES_ACTIVE=prod)
+# Optimized for Railway, Render, and Cloud Container Environments
+# ====================================================================
+
+server:
+  port: ${PORT:8080}
+  ssl:
+    enabled: ${SSL_ENABLED:false}
+    key-store: ${SSL_KEY_STORE:classpath:keystore.p12}
+    key-store-password: ${SSL_KEY_STORE_PASSWORD:}
+    key-store-type: PKCS12
+
+spring:
+  application:
+    name: winter-arc-server
+  datasource:
+    # Supports Railway's PGHOST/PGPORT/PGDATABASE/PGUSER/PGPASSWORD or SPRING_DATASOURCE_URL
+    url: ${SPRING_DATASOURCE_URL:${JDBC_DATABASE_URL:jdbc:postgresql://${PGHOST:localhost}:${PGPORT:5432}/${PGDATABASE:winterarcdb}}}
+    username: ${SPRING_DATASOURCE_USERNAME:${PGUSER:winterarc_admin}}
+    password: ${SPRING_DATASOURCE_PASSWORD:${PGPASSWORD:}}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 3
+      idle-timeout: 300000
+      max-lifetime: 1800000
+      connection-timeout: 20000
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+  sql:
+    init:
+      mode: always
+      continue-on-error: true
+      schema-locations: classpath:schema.sql
+  h2:
+    console:
+      enabled: false # Strictly disabled in production
+
+winterarc:
+  entitlement:
+    production-mode: ${WINTERARC_ENTITLEMENT_PROD_MODE:false}
+    active-key-id: ${WINTERARC_ENTITLEMENT_ACTIVE_KEY_ID:ed25519-2026-v1}
+    product-id: "winter-arc-desktop"
+    schema-version: 1
+    offline-grace-period-seconds: 1209600 # 14 days
+    private-key: ${WINTERARC_ENTITLEMENT_PRIVATE_KEY:MC4CAQAwBQYDK2VwBCIEIIFVzMh7VkMNYgPxVtTe2NY/8dbuitHEwKYw9ojUwfWM}
+    public-key: ${WINTERARC_ENTITLEMENT_PUBLIC_KEY:MCowBQYDK2VwAyEAymrcZQtlmSRFGVI/sW+IGNUHFN4ksBAq8iVjfjuDohg=}
+  security:
+    jwt-secret: ${WINTERARC_SECURITY_JWT_SECRET:winterarc_super_secure_jwt_secret_key_minimum_256_bits_length_for_hmac_sha256!}
+    jwt-expiration-ms: 86400000 # 24 hours
+    cors:
+      allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173,http://localhost:3000,https://winterarc.pro,https://www.winterarc.pro}
+  razorpay:
+    key-id: ${RAZORPAY_KEY_ID:rzp_test_placeholder_key_id}
+    key-secret: ${RAZORPAY_KEY_SECRET:rzp_test_placeholder_key_secret}
+    webhook-secret: ${RAZORPAY_WEBHOOK_SECRET:rzp_sec_razorpay_winterarc_prod_secret_key_test_123}
+    api-base-url: ${RAZORPAY_API_BASE_URL:https://api.razorpay.com/v1}
+    connect-timeout-ms: 10000
+    read-timeout-ms: 15000
+  google:
+    client-id: ${GOOGLE_CLIENT_ID:}
+  webhooks:
+    stripe-webhook-secret: ${STRIPE_WEBHOOK_SECRET:whsec_stripe_winterarc_prod_secret_key_test_123}
+    razorpay-webhook-secret: ${RAZORPAY_WEBHOOK_SECRET:rzp_sec_razorpay_winterarc_prod_secret_key_test_123}
+
+logging:
+  level:
+    com.winterarc: INFO
+    org.springframework.security: WARN
+    org.hibernate.SQL: WARN

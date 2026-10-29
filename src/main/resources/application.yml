@@ -1,0 +1,52 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: winter-arc-server
+  datasource:
+    url: jdbc:h2:mem:winterarcdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+winterarc:
+  entitlement:
+    active-key-id: "ed25519-2026-v1"
+    product-id: "winter-arc-desktop"
+    schema-version: 1
+    offline-grace-period-seconds: 1209600 # 14 days
+    production-mode: false
+    # Ed25519 PKCS#8 Base64 Private Key (Active Signing Key)
+    private-key: "MC4CAQAwBQYDK2VwBCIEIIFVzMh7VkMNYgPxVtTe2NY/8dbuitHEwKYw9ojUwfWM"
+    # Ed25519 X.509 Base64 Public Key (Verification)
+    public-key: "MCowBQYDK2VwAyEAymrcZQtlmSRFGVI/sW+IGNUHFN4ksBAq8iVjfjuDohg="
+  security:
+    jwt-secret: "${WINTERARC_SECURITY_JWT_SECRET:winterarc_super_secure_jwt_secret_key_minimum_256_bits_length_for_hmac_sha256!}"
+    jwt-expiration-ms: 86400000 # 24 hours
+  razorpay:
+    key-id: "${RAZORPAY_KEY_ID:rzp_test_placeholder_key_id}"
+    key-secret: "${RAZORPAY_KEY_SECRET:rzp_test_placeholder_key_secret}"
+    webhook-secret: "${RAZORPAY_WEBHOOK_SECRET:rzp_sec_razorpay_winterarc_prod_secret_key_test_123}"
+    api-base-url: "${RAZORPAY_API_BASE_URL:https://api.razorpay.com/v1}"
+    connect-timeout-ms: 10000
+    read-timeout-ms: 15000
+  google:
+    client-id: "${GOOGLE_CLIENT_ID:}"
+  webhooks:
+    stripe-webhook-secret: "${STRIPE_WEBHOOK_SECRET:whsec_stripe_winterarc_prod_secret_key_test_123}"
+    razorpay-webhook-secret: "${RAZORPAY_WEBHOOK_SECRET:rzp_sec_razorpay_winterarc_prod_secret_key_test_123}"
+
+logging:
+  level:
+    com.winterarc: INFO
+    org.springframework.security: WARN
