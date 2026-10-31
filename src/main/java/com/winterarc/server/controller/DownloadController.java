@@ -30,9 +30,9 @@ public class DownloadController {
         release.put("version", latestVersion);
         release.put("releaseDate", "2026-10-31");
         release.put("installerFilename", "Winter ARC Pro-1.1.0.msi");
-        release.put("fileSizeBytes", 77928777L);
-        release.put("fileSizeFormatted", "74.32 MB");
-        release.put("sha256", "2817b1e04cb1ce508e3df79db045c25630ee8fa5fb036918253b16b4b82633ae");
+        release.put("fileSizeBytes", 77976635L);
+        release.put("fileSizeFormatted", "74.36 MB");
+        release.put("sha256", "a3450987f79081c04a8f71a3baf53950e2de096bdcd4f3aada28ebef806ca316");
         release.put("architecture", "x64");
         release.put("operatingSystem", "Windows 10 / Windows 11 (64-bit)");
         release.put("bundledJre", "Java 21 JRE Embedded (Zero installation required)");
