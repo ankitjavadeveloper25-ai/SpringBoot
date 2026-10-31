@@ -14,10 +14,10 @@ import java.util.Map;
 @RequestMapping("/api/downloads")
 public class DownloadController {
 
-    @Value("${winterarc.downloads.latest-version:1.0.1}")
+    @Value("${winterarc.downloads.latest-version:1.1.0}")
     private String latestVersion;
 
-    @Value("${winterarc.downloads.latest-url:/downloads/Winter-ARC-Pro-1.0.1.msi}")
+    @Value("${winterarc.downloads.latest-url:/downloads/Winter-ARC-Pro-1.1.0.msi}")
     private String latestDownloadUrl;
 
     @Value("${winterarc.downloads.github-releases-url:https://github.com/winterarc/winter-arc-desktop/releases}")
@@ -28,11 +28,11 @@ public class DownloadController {
         Map<String, Object> release = new LinkedHashMap<>();
         release.put("productName", "Winter ARC Pro Desktop");
         release.put("version", latestVersion);
-        release.put("releaseDate", "2026-10-29");
-        release.put("installerFilename", "Winter ARC Pro-1.0.1.msi");
-        release.put("fileSizeBytes", 76425545L);
-        release.put("fileSizeFormatted", "72.88 MB");
-        release.put("sha256", "96374a521f746bd238eadb0a94b6934ebe4ae92cd7ebc615dda081400cc770c2");
+        release.put("releaseDate", "2026-10-31");
+        release.put("installerFilename", "Winter ARC Pro-1.1.0.msi");
+        release.put("fileSizeBytes", 77928777L);
+        release.put("fileSizeFormatted", "74.32 MB");
+        release.put("sha256", "2817b1e04cb1ce508e3df79db045c25630ee8fa5fb036918253b16b4b82633ae");
         release.put("architecture", "x64");
         release.put("operatingSystem", "Windows 10 / Windows 11 (64-bit)");
         release.put("bundledJre", "Java 21 JRE Embedded (Zero installation required)");
