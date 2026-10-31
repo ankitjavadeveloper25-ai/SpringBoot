@@ -27,12 +27,13 @@ public class DownloadController {
     public ResponseEntity<Map<String, Object>> getLatestRelease() {
         Map<String, Object> release = new LinkedHashMap<>();
         release.put("productName", "Winter ARC Pro Desktop");
+        release.put("publisher", "Ankit");
         release.put("version", latestVersion);
         release.put("releaseDate", "2026-10-31");
         release.put("installerFilename", "Winter ARC Pro-1.1.0.msi");
-        release.put("fileSizeBytes", 77976635L);
-        release.put("fileSizeFormatted", "74.36 MB");
-        release.put("sha256", "a3450987f79081c04a8f71a3baf53950e2de096bdcd4f3aada28ebef806ca316");
+        release.put("fileSizeBytes", 77979648L);
+        release.put("fileSizeFormatted", "74.37 MB");
+        release.put("sha256", "aa00266b14503f180195832813809a07a739a619eeb1b39758ef9791d75d2f35");
         release.put("architecture", "x64");
         release.put("operatingSystem", "Windows 10 / Windows 11 (64-bit)");
         release.put("bundledJre", "Java 21 JRE Embedded (Zero installation required)");
