@@ -14,13 +14,13 @@ import java.util.Map;
 @RequestMapping("/api/downloads")
 public class DownloadController {
 
-    @Value("${winterarc.downloads.latest-version:1.1.0}")
+    @Value("${winterarc.downloads.latest-version:1.02}")
     private String latestVersion;
 
-    @Value("${winterarc.downloads.latest-url:/downloads/Winter-ARC-Pro-1.1.0.msi}")
+    @Value("${winterarc.downloads.latest-url:/downloads/Winter-ARC-Pro-1.02.msi}")
     private String latestDownloadUrl;
 
-    @Value("${winterarc.downloads.github-releases-url:https://github.com/winterarc/winter-arc-desktop/releases}")
+    @Value("${winterarc.downloads.github-releases-url:https://github.com/ankitjavadeveloper25-ai/ProgressTracker/releases}")
     private String githubReleasesUrl;
 
     @GetMapping("/latest")
@@ -29,11 +29,11 @@ public class DownloadController {
         release.put("productName", "Winter ARC Pro Desktop");
         release.put("publisher", "Ankit");
         release.put("version", latestVersion);
-        release.put("releaseDate", "2026-10-31");
-        release.put("installerFilename", "Winter ARC Pro-1.1.0.msi");
-        release.put("fileSizeBytes", 77979648L);
-        release.put("fileSizeFormatted", "74.37 MB");
-        release.put("sha256", "aa00266b14503f180195832813809a07a739a619eeb1b39758ef9791d75d2f35");
+        release.put("releaseDate", "2026-11-03");
+        release.put("installerFilename", "Winter-ARC-Pro-1.02.msi");
+        release.put("fileSizeBytes", 78364672L);
+        release.put("fileSizeFormatted", "74.73 MB");
+        release.put("sha256", "2d1cdd0476108bfa7fd69b823ffee80dc9add3f66b33aac38ee676e62a0d528e");
         release.put("architecture", "x64");
         release.put("operatingSystem", "Windows 10 / Windows 11 (64-bit)");
         release.put("bundledJre", "Java 21 JRE Embedded (Zero installation required)");

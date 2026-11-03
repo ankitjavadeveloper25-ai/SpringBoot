@@ -45,7 +45,11 @@ public class CheckoutController {
         this.razorpayGateway = razorpayGateway;
     }
 
-    public record CheckoutRequest(String plan, String provider, String currency, String idempotencyKey) {}
+    public record CheckoutRequest(String plan, String provider, String currency, String idempotencyKey, String email, String fullName) {
+        public CheckoutRequest(String plan, String provider, String currency, String idempotencyKey) {
+            this(plan, provider, currency, idempotencyKey, null, null);
+        }
+    }
 
     public record RazorpayVerifyRequest(String razorpayOrderId, String razorpayPaymentId, String razorpaySignature) {}
 
@@ -127,10 +131,22 @@ public class CheckoutController {
      */
     @PostMapping("/razorpay/create-order")
     public ResponseEntity<?> createRazorpayOrder(@RequestBody CheckoutRequest req, Authentication auth) {
-        if (auth == null || auth.getPrincipal() == null) {
-            return ResponseEntity.status(401).body(Map.of("error", "Authentication required"));
+        String userId;
+        if (auth != null && auth.getPrincipal() != null) {
+            userId = (String) auth.getPrincipal();
+        } else {
+            String guestEmail = (req.email() != null && !req.email().isBlank()) ? req.email().trim().toLowerCase() : "guest@winterarc.pro";
+            Optional<User> existingUser = userRepository.findByEmail(guestEmail);
+            User user = existingUser.orElseGet(() -> {
+                User newUser = new User();
+                newUser.setEmail(guestEmail);
+                newUser.setFullName(req.fullName() != null && !req.fullName().isBlank() ? req.fullName().trim() : "Winter ARC Customer");
+                newUser.setPasswordHash("");
+                newUser.setRole("ROLE_USER");
+                return userRepository.save(newUser);
+            });
+            userId = user.getId();
         }
-        String userId = (String) auth.getPrincipal();
 
         try {
             RazorpayCheckoutDto dto = razorpayPaymentService.createOrder(userId, req.plan(), req.currency(), req.idempotencyKey());
@@ -153,10 +169,24 @@ public class CheckoutController {
      */
     @PostMapping("/razorpay/verify")
     public ResponseEntity<?> verifyRazorpayPayment(@RequestBody RazorpayVerifyRequest req, Authentication auth) {
-        if (auth == null || auth.getPrincipal() == null) {
-            return ResponseEntity.status(401).body(Map.of("error", "Authentication required"));
+        String userId = null;
+        if (auth != null && auth.getPrincipal() != null) {
+            userId = (String) auth.getPrincipal();
+        } else {
+            Optional<PaymentOrder> orderOpt = paymentOrderRepository.findByRazorpayOrderId(req.razorpayOrderId());
+            if (orderOpt.isPresent()) {
+                userId = orderOpt.get().getUser().getId();
+            } else {
+                Optional<User> guestUser = userRepository.findByEmail("guest@winterarc.pro");
+                if (guestUser.isPresent()) {
+                    userId = guestUser.get().getId();
+                }
+            }
         }
-        String userId = (String) auth.getPrincipal();
+
+        if (userId == null) {
+            return ResponseEntity.status(401).body(Map.of("error", "Authentication required or order not found"));
+        }
 
         try {
             Map<String, Object> result = razorpayPaymentService.verifyPayment(

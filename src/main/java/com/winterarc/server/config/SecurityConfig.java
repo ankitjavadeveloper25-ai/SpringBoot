@@ -55,7 +55,7 @@ public class SecurityConfig {
                     .requestMatchers("/api/plans/**").permitAll()
                     .requestMatchers("/api/downloads/**").permitAll()
                     .requestMatchers("/api/webhooks/**").permitAll()
-                    .requestMatchers("/api/checkout/razorpay/hosted").permitAll()
+                    .requestMatchers("/api/checkout/**").permitAll()
                     .requestMatchers("/api/announcements/active").permitAll()
                     .requestMatchers("/error").permitAll();
 
